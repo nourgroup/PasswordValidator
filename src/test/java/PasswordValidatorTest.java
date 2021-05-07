@@ -2,6 +2,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class PasswordValidatorTest {
 
@@ -17,19 +18,19 @@ class PasswordValidatorTest {
         mPasswordValidator = null;
     }
 
+    @Test
     void lengthTest(){
-        mPasswordValidator.password = "OKOAAK";
-        Assert.assertFalse(mPasswordValidator.length(mPasswordValidator.password));
+        Assert.assertTrue(mPasswordValidator.length("OKOAA"));
     }
 
+    @Test
     void digitTest(){
-        mPasswordValidator.password = "9939939";
-        Assert.assertFalse(mPasswordValidator.digit(mPasswordValidator.password));
+        Assert.assertTrue(mPasswordValidator.OneDigit("9939939"));
     }
 
+    @Test
     void letterTest(){
-        mPasswordValidator.password = "HHHHZH";
-        Assert.assertFalse(mPasswordValidator.letter(mPasswordValidator.password));
+        Assert.assertTrue(mPasswordValidator.OneLetter("HHHHZH"));
     }
 
 }
