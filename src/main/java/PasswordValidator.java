@@ -8,11 +8,11 @@ public class PasswordValidator {
     String password;
 
     public enum Strings {
-        AtLeastlength("AtLeastlength"),
-        AtLeastOneDigit("AtLeastOneDigit"),
-        AtLeastOneLetter("AtLeastOneLetter"),
-        AtLeastDixCar("AtLeastDixCar"),
-        AtLeastOneCarSpe("AtLeastOneCarSpe");
+        AtLeastlength("At Least 6 in length"),
+        AtLeastOneDigit("At Least One Digit"),
+        AtLeastOneLetter("At Least One Letter"),
+        AtLeastDixCar("At Least ten Character"),
+        AtLeastOneCarSpe("At Least One Special Character");
 
         private final String text;
 
@@ -28,12 +28,12 @@ public class PasswordValidator {
 
 
     boolean AtLeastlength(String password){
-        return password.length()<6;
+        return password.length()>6;
     }
 
     boolean AtLeastOneDigit(String password){
         // compilation de la regex /*
-        Pattern p = Pattern.compile("\\d{1,}");//[0-9],
+        Pattern p = Pattern.compile("[0-9]+");//,
         // création d'un moteur de recherche
         Matcher m = p.matcher(password);
         // lancement de la recherche de toutes les occurrences
@@ -55,41 +55,41 @@ public class PasswordValidator {
     //Au moins un caractère spéciale
     boolean AtLeastOneCarSpe(String password){
         // compilation de la regex
-        Pattern p = Pattern.compile("\\W");
+        Pattern p = Pattern.compile("[@,#,$,%]+");
         // création d'un moteur de recherche
         Matcher m = p.matcher(password);
         // lancement de la recherche de toutes les occurrences
         return m.matches();
     }
 
-    boolean verifyAll(String password){
+    boolean verifyAllForUser(String password){
         return AtLeastlength(password)
                 && AtLeastOneDigit(password)
-                && AtLeastOneLetter(password)
-                && AtLeastDixCar(password)
-            && AtLeastOneCarSpe(password);
+                && AtLeastOneLetter(password);
     }
 
-    ArrayList<Strings> msgError(String password){
+    boolean verifyAllForAdmin(String password){
+        return verifyAllForUser(password)
+                && AtLeastDixCar(password)
+                && AtLeastOneCarSpe(password);
+    }
+
+    ArrayList<Strings> msgErrorUser(String password){
         ArrayList<Strings> ERROR = new ArrayList<>();
-        if(verifyAll(password)){
+        if(verifyAllForUser(password)){
             return null;
         }
-        if(!AtLeastOneDigit(password)){
+        if(!AtLeastlength(password)){
             ERROR.add(Strings.AtLeastlength);
         }
-        if(!AtLeastOneLetter(password)){
+        if(!AtLeastOneDigit(password)){
             ERROR.add(Strings.AtLeastOneDigit);
         }
-        if(!AtLeastDixCar(password)){
+        if(!AtLeastOneLetter(password)){
             ERROR.add(Strings.AtLeastOneLetter);
         }
-        if(!AtLeastOneCarSpe(password)){
-            ERROR.add(Strings.AtLeastDixCar);
-        }
-        if(!AtLeastOneCarSpe(password)){
-            ERROR.add(Strings.AtLeastOneCarSpe);
-        }
+
+
         /**
          AtLeastlength("AtLeastlength"),
          AtLeastOneDigit("AtLeastOneDigit"),
@@ -100,5 +100,22 @@ public class PasswordValidator {
         return ERROR;
     }
 
+
+    ArrayList<Strings> msgErrorAdmin(String password){
+        ArrayList<Strings> ERROR = msgErrorUser(password);
+        if(verifyAllForAdmin(password)){
+            return null;
+        }
+
+        if(!AtLeastOneCarSpe(password)){
+            ERROR.add(Strings.AtLeastOneCarSpe);
+        }
+
+        if(!AtLeastDixCar(password)){
+            ERROR.add(Strings.AtLeastDixCar);
+        }
+
+        return ERROR;
+    }
 
 }
